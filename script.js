@@ -26,15 +26,15 @@ const GROUP_LEADERS = {
 
 const SHIFTS = [
   { name: "Morning Shift", window: "07:00 AM - 03:00 PM", key: "morning" },
-  { name: "Evening Shift", window: "03:00 PM - 11:00 PM", key: "evening" },
-  { name: "Night Shift",   window: "11:00 PM - 07:00 AM", key: "night" }
+  { name: "Evening Shift", window: "03:00 PM - 09:30 PM", key: "evening" },
+  { name: "Night Shift",   window: "09:30 PM - 07:00 AM", key: "night" }
 ];
 
 const ROTATION_PATTERN = [
-  { morning: "Group B", evening: "Group C", night: "Group D" },
-  { morning: "Group A", evening: "Group B", night: "Group C" },
-  { morning: "Group D", evening: "Group A", night: "Group B" },
-  { morning: "Group C", evening: "Group D", night: "Group A" }
+  { morning: "Group B", evening: "Group C", night: "Group A" },
+  { morning: "Group D", evening: "Group B", night: "Group C" },
+  { morning: "Group A", evening: "Group D", night: "Group B" },
+  { morning: "Group C", evening: "Group A", night: "Group D" }
 ];
 
 const ANCHOR_DATE = new Date("2026-07-30T00:00:00");
