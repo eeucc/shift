@@ -3,149 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ethiopian Electric Utility - Customer Contact Center 905 Shift Schedule</title>
+  <title>EEU 905 - Live Duty & Upcoming Teams</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="shortcut icon" href="eeu-logo.png" type="image/x-icon">
+  <link rel="icon" href="eeu-logo.png" type="image/png">
 </head>
 <body>
 
 <div class="card">
-  <div class="header-marquee-banner">
-    <div class="marquee-content">Ethiopian Electric Utility</div>
-  </div>
-
   <div class="top-bar">
     <div class="brand-section">
-      <img src="eeu-logo.png" alt="EEU Logo" class="app-logo" />
+      <img 
+        src="eeu-logo.png"
+        alt="EEU Logo" 
+        class="app-logo" 
+        id="company-logo"
+      />
       <div class="header-titles">
-        <div class="brand-title"><strong>905</strong> Customer Contact Center</div>
-        <div class="header-sub">ON Duty Teamleaders Management System</div>
+        <div class="brand-title">EEU 905</div>
+        <div class="header-sub">Customer Contact Center</div>
       </div>
     </div>
     
-    <div class="top-actions">
-      <button class="admin-auth-btn" id="admin-btn" onclick="handleAdminAuthClick()">
-        <span id="admin-text">Admin Login</span>
-      </button>
-      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
-        <span id="theme-icon">☀️</span> <span id="theme-text">Light</span>
-      </button>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+      <span id="theme-icon">☀️</span> <span id="theme-text">Light</span>
+    </button>
+  </div>
+
+  <div class="badge-container">
+    <span class="status-badge"><span class="pulse"></span> LIVE ON DUTY</span>
+  </div>
+
+  <div class="duty-summary">
+    <div class="group-display" id="active-group">--</div>
+    <div class="shift-name" id="shift-name">--</div>
+    <div class="shift-window" id="shift-window">--</div>
+  </div>
+
+  <div class="leaders-section-title">
+    <span>Duty Team Leaders</span>
+    <span id="active-count-badge" style="color: #10b981; font-weight: 600;">--</span>
+  </div>
+
+  <div class="leaders-list" id="leaders-list">
+
+  </div>
+
+  <div class="upcoming-box">
+    <div>
+      <div class="upcoming-label">NEXT UPCOMING SHIFT </div>
+      <div class="upcoming-group" id="upcoming-group">--</div>
+    </div>
+    <div class="upcoming-info">
+      <div class="upcoming-shift-name" id="upcoming-shift-name">--</div>
+      <div class="upcoming-shift-window" id="upcoming-shift-window">--</div>
     </div>
   </div>
 
-  <div class="app-layout-grid">
-    <div class="left-panel">
-      <div class="badge-container">
-        <span class="status-badge"><span class="pulse"></span> LIVE ON DUTY</span>
-      </div>
-
-      <div class="duty-summary">
-        <div class="group-display" id="active-group">--</div>
-        <div class="shift-name" id="shift-name">--</div>
-        <div class="shift-window" id="shift-window">--</div>
-      </div>
-
-      <div class="leaders-section-title">
-        <span>Duty Team Leaders</span>
-        <span id="active-count-badge" style="color: #10b981; font-weight: 600;">--</span>
-      </div>
-
-      <div class="leaders-list" id="leaders-list"></div>
-
-      <div class="upcoming-box">
-        <div>
-          <div class="upcoming-label">NEXT SHIFT UPCOMING</div>
-          <div class="upcoming-group" id="upcoming-group">--</div>
-        </div>
-        <div class="upcoming-info">
-          <div class="upcoming-shift-name" id="upcoming-shift-name">--</div>
-          <div class="upcoming-shift-window" id="upcoming-shift-window">--</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="right-panel">
-      <div class="date-picker-box">
-        <div class="date-picker-header">
-          <span>Further Shift Lookup</span>
-          <span class="date-badge-pill" id="selected-date-label">Today</span>
-        </div>
-        
-        <div class="date-input-controls">
-          <input type="date" id="lookup-date-input" class="standard-date-input" onchange="handleDateInputChange(this.value)" />
-          <button class="today-btn" onclick="selectTodayDirectly()">Today</button>
-        </div>
-
-        <div class="day-schedule-grid">
-          <div class="schedule-card">
-            <div class="schedule-shift-label">Morning</div>
-            <div class="schedule-group-val" id="sched-group-morning">--</div>
-            <div class="schedule-time-val">07 AM-03 PM</div>
-            <div class="leaders-popover">
-              <div class="popover-header"><span id="pop-title-morning">Team Leaders</span></div>
-              <div id="pop-list-morning"></div>
-            </div>
-          </div>
-
-          <div class="schedule-card">
-            <div class="schedule-shift-label">Evening</div>
-            <div class="schedule-group-val" id="sched-group-evening">--</div>
-            <div class="schedule-time-val">03 PM-10 PM</div>
-            <div class="leaders-popover">
-              <div class="popover-header"><span id="pop-title-evening">Team Leaders</span></div>
-              <div id="pop-list-evening"></div>
-            </div>
-          </div>
-
-          <div class="schedule-card">
-            <div class="schedule-shift-label">Night</div>
-            <div class="schedule-group-val" id="sched-group-night">--</div>
-            <div class="schedule-time-val">10 PM-07 AM</div>
-            <div class="leaders-popover">
-              <div class="popover-header"><span id="pop-title-night">Team Leaders</span></div>
-              <div id="pop-list-night"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="system-clock-card">
-          <div class="clock-top-row">
-            <div class="clock-status-tag"><span class="clock-pulse-dot"></span><span>System Clock</span></div>
-            <span class="clock-tz-badge">EAT (UTC+3)</span>
-          </div>
-          <div class="clock-digits-wrapper">
-            <span class="clock-time-main" id="clock-hours-mins">00:00</span>
-            <span class="clock-time-seconds" id="clock-secs">:00</span>
-            <span class="clock-time-ampm" id="clock-ampm">AM</span>
-          </div>
-          <div class="clock-date-sub" id="clock-date-full">Loading Date...</div>
-        </div>
-      </div>
-    </div>
+  <div class="current-time">
+    System Time: <span id="current-time">--:--:-- --</span>
   </div>
 
   <footer class="app-footer">
     <div class="footer-bottom">
-    <div>&copy; 2026 Ethiopian Electric Utility - Customer Contact Center 905. All rights reserved.</div>
-    <div class="developer-info">
-      Developed by <strong>Lemma Tadesse</strong> | 
-      <a href="mailto:lemmatadesse908@gmail.com" class="developer-email">lemmatadesse908@gmail.com</a>
-    </div>
+      <div>© 2026 EEU 905 Customer Contact Center. All rights reserved.</div>
+      <div class="developer-info">
+        Developed by <strong>Lemma Tadesse</strong> | 
+        <a href="mailto:lemmatadesse908@gmail.com" class="developer-email">lemmatadesse908@gmail.com</a>
+      </div>
     </div>
   </footer>
-</div>
-
-<!-- Passcode -->
-<div class="modal-backdrop" id="auth-modal">
-  <div class="modal-card">
-    <div class="modal-title">Admin Verification</div>
-    <div class="modal-sub">Enter the 4-digit passcode to modify team leader statuses.</div>
-    <input type="password" id="admin-pin-input" class="pin-input" maxlength="4" placeholder="••••" />
-    <div class="modal-actions">
-      <button class="modal-btn modal-btn-cancel" onclick="closeAuthModal()">Cancel</button>
-      <button class="modal-btn modal-btn-confirm" onclick="verifyAdminPin()">Unlock</button>
-    </div>
-  </div>
 </div>
 
 <script src="script.js"></script>
