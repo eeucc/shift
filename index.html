@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EEU 905 - Live Duty & Upcoming Teams</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/images/eeu-logo.png" type="image/png">
+</head>
+<body>
+
+<div class="card">
+  <div class="top-bar">
+    <div class="brand-section">
+      <img 
+        src="images/eeu-logo.png"
+        alt="EEU Logo" 
+        class="app-logo" 
+        id="company-logo"
+      />
+      <div class="header-titles">
+        <div class="brand-title">EEU 905</div>
+        <div class="header-sub">Customer Contact Center</div>
+      </div>
+    </div>
+    
+    <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+      <span id="theme-icon">☀️</span> <span id="theme-text">Light</span>
+    </button>
+  </div>
+
+  <div class="badge-container">
+    <span class="status-badge"><span class="pulse"></span> LIVE ON DUTY</span>
+  </div>
+
+  <div class="duty-summary">
+    <div class="group-display" id="active-group">--</div>
+    <div class="shift-name" id="shift-name">--</div>
+    <div class="shift-window" id="shift-window">--</div>
+  </div>
+
+  <div class="leaders-section-title">
+    <span>Duty Team Leaders</span>
+    <span id="active-count-badge" style="color: #10b981; font-weight: 600;">--</span>
+  </div>
+
+  <div class="leaders-list" id="leaders-list">
+
+  </div>
+
+  <div class="upcoming-box">
+    <div>
+      <div class="upcoming-label">NEXT UPCOMING SHIFT </div>
+      <div class="upcoming-group" id="upcoming-group">--</div>
+    </div>
+    <div class="upcoming-info">
+      <div class="upcoming-shift-name" id="upcoming-shift-name">--</div>
+      <div class="upcoming-shift-window" id="upcoming-shift-window">--</div>
+    </div>
+  </div>
+
+  <div class="current-time">
+    System Time: <span id="current-time">--:--:-- --</span>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-bottom">
+      <div>© 2026 EEU 905 Customer Contact Center. All rights reserved.</div>
+      <div class="developer-info">
+        Developed by <strong>Lemma Tadesse</strong> | 
+        <a href="mailto:lemmatadesse908@gmail.com" class="developer-email">lemmatadesse908@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
