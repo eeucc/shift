@@ -3,13 +3,13 @@ const GROUP_LEADERS = {
   "Group A": [
     { id: "a1", name: "Meron Zewdie", phone: "+251 91 958 4882", active: true },
     { id: "a2", name: "Samuel Zenebe", phone: "+251 91 283 5731", active: true },
-    { id: "a3", name: "Getachew Abeje", phone: "+251 91 919 6506", active: false }
+    { id: "a3", name: "Getachew Abeje", phone: "+251 91 919 6506", active: true }
   ],
   "Group B": [
     { id: "b1", name: "Lemma Tadesse", phone: "+251 92 711 2871", active: true },
     { id: "b2", name: "Moera Terfasa", phone: "+251 96 116 2564", active: true },
     { id: "b3", name: "Roman Bekele", phone: "+251 92 904 5713", active: true },
-    { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: false }
+    { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: true }
   ],
   "Group C": [
     { id: "c1", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
