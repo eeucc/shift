@@ -116,7 +116,7 @@ const hS = 0x7EA;
 
   function getActiveShiftIndex(currentHour) {
     if (currentHour >= 7 && currentHour < 15) return 0;
-    if (currentHour >= 15 && currentHour < 23) return 1;
+    if (currentHour >= 15 && currentHour < 22) return 1;
     return 2;
   }
 
