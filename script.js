@@ -1,44 +1,44 @@
-let isAdminAuthenticated = false;
-const hS = 0x7EA;
+  let isAdminAuthenticated = false;
+  const hS = 0x7EA;
   const ADMIN_PIN = hS.toString();
 
   const GROUP_LEADERS = {
-  "Group A": [
-    { id: "a1", name: "Meron Zewdie", phone: "+251 91 958 4882", active: true },
-    { id: "a2", name: "Samuel Zenebe", phone: "+251 91 283 5731", active: true },
-    { id: "a3", name: "Getachew Abeje", phone: "+251 91 919 6506", active: true }
-  ],
-  "Group B": [
-    { id: "b1", name: "Lemma Tadesse", phone: "+251 92 711 2871", active: true },
-    { id: "b2", name: "Moera Terfasa", phone: "+251 96 116 2564", active: true },
-    { id: "b3", name: "Roman Bekele", phone: "+251 92 904 5713", active: true },
-    { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: false }
-  ],
-  "Group C": [
-    { id: "c1", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
-    { id: "c2", name: "Melaku Getachew", phone: "+251 94 069 8357", active: true },
-    { id: "c3", name: "Abdurehiman Yimer", phone: "+251 93 403 3815", active: true }
-  ],
-  "Group D": [
-    { id: "d1", name: "Helen Wendosen", phone: "+251 92 256 8557", active: true },
-    { id: "d2", name: "Biruk Abebe", phone: "+251 92 323 2872", active: true },
-    { id: "d3", name: "Tigist Tsige", phone: "+251 93 559 6268", active: true },
-    { id: "d4", name: "Legish Leul", phone: "+251 93 686 2886", active: true }
-  ]
-};
+    "Group A": [
+      { id: "a1", name: "Meron Zewdie", phone: "+251 91 958 4882", active: true },
+      { id: "a2", name: "Samuel Zenebe", phone: "+251 91 283 5731", active: true },
+      { id: "a3", name: "Getachew Abeje", phone: "+251 91 919 6506", active: true }
+    ],
+    "Group B": [
+      { id: "b1", name: "Lemma Tadesse", phone: "+251 92 711 2871", active: true },
+      { id: "b2", name: "Moera Terfasa", phone: "+251 96 116 2564", active: true },
+      { id: "b3", name: "Roman Bekele", phone: "+251 92 904 5713", active: true },
+      { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: false }
+    ],
+    "Group C": [
+      { id: "c1", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
+      { id: "c2", name: "Melaku Getachew", phone: "+251 94 069 8357", active: true },
+      { id: "c3", name: "Abdurehiman Yimer", phone: "+251 93 403 3815", active: true }
+    ],
+    "Group D": [
+      { id: "d1", name: "Helen Wendosen", phone: "+251 92 256 8557", active: true },
+      { id: "d2", name: "Biruk Abebe", phone: "+251 92 323 2872", active: true },
+      { id: "d3", name: "Tigist Tsige", phone: "+251 93 559 6268", active: true },
+      { id: "d4", name: "Legish Leul", phone: "+251 93 686 2886", active: true }
+    ]
+  };
 
   const SHIFTS = [
-  { name: "Morning Shift", window: "07:00 AM - 03:00 PM", key: "morning" },
-  { name: "Evening Shift", window: "03:00 PM - 10:00 PM", key: "evening" },
-  { name: "Night Shift",   window: "10:00 PM - 07:00 AM", key: "night" }
-];
+    { name: "Morning Shift", window: "07:00 AM - 03:00 PM", key: "morning" },
+    { name: "Evening Shift", window: "03:00 PM - 10:00 PM", key: "evening" },
+    { name: "Night Shift",   window: "10:00 PM - 07:00 AM", key: "night" }
+  ];
 
   const ROTATION_PATTERN = [
-  {morning: "Group B", evening: "Group C", night: "Group A"},
-  {morning: "Group D", evening: "Group B", night: "Group C"},
-  {night: "Group B",  morning: "Group A", evening: "Group D"},
-  {morning: "Group C", evening: "Group A", night: "Group D"}
-];
+    {morning: "Group B", evening: "Group C", night: "Group A"},
+    {morning: "Group D", evening: "Group B", night: "Group C"},
+    {night: "Group B",  morning: "Group A", evening: "Group D"},
+    {morning: "Group C", evening: "Group A", night: "Group D"}
+  ];
 
   const ANCHOR_DATE = new Date("2026-07-30T00:00:00");
   let selectedDate = new Date();
@@ -178,6 +178,13 @@ const hS = 0x7EA;
   function updateDisplay() {
     const now = new Date();
 
+    // --- MIDNIGHT BOUNDARY FIX ---
+    let logicalDate = new Date(now);
+    if (now.getHours() < 7) {
+      logicalDate.setDate(logicalDate.getDate() - 1);
+    }
+
+    // 1. Update Clock UI
     let hours = now.getHours();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
@@ -186,18 +193,23 @@ const hS = 0x7EA;
     document.getElementById("clock-ampm").innerText = ampm;
     document.getElementById("clock-date-full").innerText = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 
+    // 2. Calculate Active Shift using the LOGICAL date
     const activeShiftIndex = getActiveShiftIndex(now.getHours());
-    const liveRoster = calculateRosterForDate(now);
+    const liveRoster = calculateRosterForDate(logicalDate);
     const activeShift = SHIFTS[activeShiftIndex];
     const activeGroup = liveRoster[activeShift.key];
 
+    // 3. Calculate Upcoming Shift
     let upcomingShiftIndex = (activeShiftIndex + 1) % 3;
-    let upcomingDate = new Date(now);
+    let upcomingDate = new Date(logicalDate);
+    
+    // If active shift is Night (2), the next shift is Morning of the NEXT logical day
     if (activeShiftIndex === 2) upcomingDate.setDate(upcomingDate.getDate() + 1);
 
     const upcomingRoster = calculateRosterForDate(upcomingDate);
     const upcomingShift = SHIFTS[upcomingShiftIndex];
 
+    // 4. Update Shift UI Elements
     document.getElementById("active-group").innerText = activeGroup;
     document.getElementById("shift-name").innerText = activeShift.name;
     document.getElementById("shift-window").innerText = activeShift.window;
@@ -206,6 +218,7 @@ const hS = 0x7EA;
     document.getElementById("upcoming-shift-name").innerText = upcomingShift.name;
     document.getElementById("upcoming-shift-window").innerText = upcomingShift.window;
 
+    // 5. Render Team Leaders
     const leaders = GROUP_LEADERS[activeGroup] || [];
     const activeCount = leaders.filter(l => l.active).length;
     document.getElementById("active-count-badge").innerText = `(${activeCount}/${leaders.length} Present)`;
@@ -236,6 +249,7 @@ const hS = 0x7EA;
     updateLookupDisplay();
   }
 
+  // Initialize
   initTheme();
   document.getElementById("lookup-date-input").value = formatDateToISO(selectedDate);
   updateDisplay();
