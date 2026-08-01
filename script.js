@@ -43,6 +43,33 @@
   const ANCHOR_DATE = new Date("2026-07-30T00:00:00");
   let selectedDate = new Date();
 
+  // --- LOCAL STORAGE FUNCTIONS FOR LEADER STATUS ---
+  function loadLeaderStatuses() {
+    const saved = localStorage.getItem("eeu905_leader_status");
+    if (saved) {
+      const parsedStatus = JSON.parse(saved);
+      // Loop through all groups and apply saved statuses
+      for (const group in GROUP_LEADERS) {
+        GROUP_LEADERS[group].forEach(leader => {
+          if (parsedStatus[leader.id] !== undefined) {
+            leader.active = parsedStatus[leader.id];
+          }
+        });
+      }
+    }
+  }
+
+  function saveLeaderStatuses() {
+    const statusMap = {};
+    for (const group in GROUP_LEADERS) {
+      GROUP_LEADERS[group].forEach(leader => {
+        statusMap[leader.id] = leader.active;
+      });
+    }
+    localStorage.setItem("eeu905_leader_status", JSON.stringify(statusMap));
+  }
+
+  // --- THEME FUNCTIONS ---
   function initTheme() {
     const savedTheme = localStorage.getItem("theme") || "dark";
     document.documentElement.setAttribute("data-theme", savedTheme);
@@ -110,6 +137,7 @@
     const leader = GROUP_LEADERS[groupId].find(l => l.id === leaderId);
     if (leader) {
       leader.active = !leader.active;
+      saveLeaderStatuses(); // <-- NEW: Save status immediately when toggled
       updateDisplay();
     }
   }
@@ -249,8 +277,9 @@
     updateLookupDisplay();
   }
 
-  // Initialize
+  // Initialize Data
   initTheme();
+  loadLeaderStatuses(); // <-- NEW: Load saved status from local storage on page load
   document.getElementById("lookup-date-input").value = formatDateToISO(selectedDate);
   updateDisplay();
   setInterval(updateDisplay, 1000);
