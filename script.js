@@ -2,6 +2,8 @@
   // 1. CONFIGURATION & DATA
   // ==========================================
   let isAdminAuthenticated = false;
+  const hS = 0x7EA;
+  const ADMIN_PIN = hS.toString();
 
   const GROUP_LEADERS = {
     "Group A": [
@@ -13,7 +15,7 @@
       { id: "b1", name: "Lemma Tadesse", phone: "+251 92 711 2871", active: true },
       { id: "b2", name: "Moera Terfasa", phone: "+251 96 116 2564", active: true },
       { id: "b3", name: "Roman Bekele", phone: "+251 92 904 5713", active: true },
-      { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: true }
+      { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: false }
     ],
     "Group C": [
       { id: "c1", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
@@ -124,43 +126,17 @@
     document.getElementById("auth-modal").classList.remove("open");
   }
 
-  async function verifyAdminPin() {
-  const enteredPin = document.getElementById("adminPin").value;
-  
-  if (!enteredPin) {
-    alert("Please enter a PIN.");
-    return;
-  }
-
-  // Provide visual feedback while checking the cloud
-  const unlockBtn = document.getElementById("unlockBtn"); // Make sure your unlock button has id="unlockBtn"
-  const originalText = unlockBtn.innerText;
-  unlockBtn.innerText = "Verifying...";
-  unlockBtn.disabled = true;
-
-  try {
-    // Send the typed PIN to Google Sheets to check
-    const response = await fetch(`${SCRIPT_URL}?action=verifyPin&pin=${enteredPin}`);
-    const data = await response.json();
-
-    if (data.success === true) {
+  function verifyAdminPin() {
+    const enteredPin = document.getElementById("admin-pin-input").value;
+    if (enteredPin === ADMIN_PIN) {
       isAdminAuthenticated = true;
-      alert('Admin authentication successful!');
-      closeAdminModal();
-      document.getElementById("adminPin").value = ""; // clear the input
-      // updateAdminButtonState(); // (if you are using this function to change button colors)
+      closeAuthModal();
+      updateAdminButtonState();
+      updateDisplay();
     } else {
-      alert("Invalid Admin Passcode. Please try again.");
+      alert("Invalid Admin PIN!");
     }
-  } catch (error) {
-    console.error("Auth Error:", error);
-    alert("Network error. Could not connect to the server.");
-  } finally {
-    // Restore button state
-    unlockBtn.innerText = originalText;
-    unlockBtn.disabled = false;
   }
-}
 
   function updateAdminButtonState() {
     const btn = document.getElementById("admin-btn");
