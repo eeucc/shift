@@ -34,10 +34,10 @@ const hS = 0x7EA;
 ];
 
   const ROTATION_PATTERN = [
-  {night: "Group A",  morning: "Group B", evening: "Group C"},
-  {night: "Group C",  morning: "Group D", evening: "Group B"},
+  {morning: "Group B", evening: "Group C", night: "Group A"},
+  {morning: "Group D", evening: "Group B", night: "Group C"},
   {night: "Group B",  morning: "Group A", evening: "Group D"},
-  {night: "Group D",  morning: "Group C", evening: "Group A"}
+  {morning: "Group C", evening: "Group A", night: "Group D"}
 ];
 
   const ANCHOR_DATE = new Date("2026-07-30T00:00:00");
@@ -117,7 +117,7 @@ const hS = 0x7EA;
   function getActiveShiftIndex(currentHour) {
     if (currentHour >= 7 && currentHour < 15) return 0;
     if (currentHour >= 15 && currentHour < 22) return 1;
-   if ((currentHour >= 22) || (currentHour >= 0 && currentHour < 7)) return 2;
+    return 2;
   }
 
   function calculateRosterForDate(targetDate) {
