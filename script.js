@@ -117,7 +117,7 @@ const hS = 0x7EA;
   function getActiveShiftIndex(currentHour) {
     if (currentHour >= 7 && currentHour < 15) return 0;
     if (currentHour >= 15 && currentHour < 22) return 1;
-    return 2;
+   if ((currentHour >= 22) || (currentHour >= 0 && currentHour < 7)) return 2;
   }
 
   function calculateRosterForDate(targetDate) {
