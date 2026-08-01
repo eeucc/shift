@@ -34,10 +34,10 @@ const hS = 0x7EA;
 ];
 
   const ROTATION_PATTERN = [
-  { morning: "Group B", evening: "Group C", night: "Group A" },
-  { morning: "Group D", evening: "Group B", night: "Group C" },
-  { morning: "Group A", evening: "Group D", night: "Group B" },
-  { morning: "Group C", evening: "Group A", night: "Group D" }
+  {night: "Group A",  morning: "Group B", evening: "Group C"},
+  {night: "Group C",  morning: "Group D", evening: "Group B"},
+  {night: "Group B",  morning: "Group A", evening: "Group D"},
+  {night: "Group D",  morning: "Group C", evening: "Group A"}
 ];
 
   const ANCHOR_DATE = new Date("2026-07-30T00:00:00");
