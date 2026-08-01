@@ -1,3 +1,6 @@
+// ==========================================
+  // 1. CONFIGURATION & DATA
+  // ==========================================
   let isAdminAuthenticated = false;
   const hS = 0x7EA;
   const ADMIN_PIN = hS.toString();
@@ -43,33 +46,51 @@
   const ANCHOR_DATE = new Date("2026-07-30T00:00:00");
   let selectedDate = new Date();
 
-  // --- LOCAL STORAGE FUNCTIONS FOR LEADER STATUS ---
-  function loadLeaderStatuses() {
-    const saved = localStorage.getItem("eeu905_leader_status");
-    if (saved) {
-      const parsedStatus = JSON.parse(saved);
-      // Loop through all groups and apply saved statuses
+  // ==========================================
+  // 2. GOOGLE SHEETS LIVE SYNC LOGIC
+  // ==========================================
+  // IMPORTANT: Replace this URL with the Web App URL you got from Google Apps Script
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyReyUEasZQBELRuShyiIABSpzCm6ah4JU18LwTIomh2v2U7hayRJtzcPb-GOlPbNuhng/exec";
+
+  // Download statuses from the cloud
+  async function fetchLiveStatus() {
+    try {
+      const response = await fetch(SCRIPT_URL);
+      const data = await response.json();
+      
       for (const group in GROUP_LEADERS) {
         GROUP_LEADERS[group].forEach(leader => {
-          if (parsedStatus[leader.id] !== undefined) {
-            leader.active = parsedStatus[leader.id];
+          if (data[leader.id] !== undefined) {
+            leader.active = (data[leader.id] === true || data[leader.id] === "true");
           }
         });
       }
+      updateDisplay(); // Refresh UI once new data arrives
+    } catch (error) {
+      console.error("Error syncing with Google Sheets:", error);
     }
   }
 
-  function saveLeaderStatuses() {
-    const statusMap = {};
-    for (const group in GROUP_LEADERS) {
-      GROUP_LEADERS[group].forEach(leader => {
-        statusMap[leader.id] = leader.active;
-      });
+  // Handle Admin Checkbox Toggles
+  function toggleLeaderStatus(groupId, leaderId) {
+    if (!isAdminAuthenticated) return;
+    
+    const leader = GROUP_LEADERS[groupId].find(l => l.id === leaderId);
+    if (leader) {
+      // 1. Update the screen instantly for the person clicking it
+      leader.active = !leader.active;
+      updateDisplay();
+
+      // 2. Send the update to Google Sheets in the background
+      const updateUrl = `${SCRIPT_URL}?leaderId=${leaderId}&status=${leader.active}`;
+      fetch(updateUrl, { method: 'POST', mode: 'no-cors' })
+        .catch(err => console.error("Failed to update Google Sheets", err));
     }
-    localStorage.setItem("eeu905_leader_status", JSON.stringify(statusMap));
   }
 
-  // --- THEME FUNCTIONS ---
+  // ==========================================
+  // 3. UI, THEME, AND ADMIN LOGIC
+  // ==========================================
   function initTheme() {
     const savedTheme = localStorage.getItem("theme") || "dark";
     document.documentElement.setAttribute("data-theme", savedTheme);
@@ -89,7 +110,6 @@
     document.getElementById("theme-text").innerText = theme === "light" ? "Dark" : "Light";
   }
 
-  /* ADMIN LOCK / UNLOCK SYSTEM */
   function handleAdminAuthClick() {
     if (isAdminAuthenticated) {
       isAdminAuthenticated = false;
@@ -132,20 +152,13 @@
     }
   }
 
-  function toggleLeaderStatus(groupId, leaderId) {
-    if (!isAdminAuthenticated) return;
-    const leader = GROUP_LEADERS[groupId].find(l => l.id === leaderId);
-    if (leader) {
-      leader.active = !leader.active;
-      saveLeaderStatuses(); // <-- NEW: Save status immediately when toggled
-      updateDisplay();
-    }
-  }
-
+  // ==========================================
+  // 4. SHIFT CALCULATION LOGIC
+  // ==========================================
   function getActiveShiftIndex(currentHour) {
-    if (currentHour >= 7 && currentHour < 15) return 0;
-    if (currentHour >= 15 && currentHour < 22) return 1;
-    return 2;
+    if (currentHour >= 7 && currentHour < 15) return 0; // Morning
+    if (currentHour >= 15 && currentHour < 22) return 1; // Evening
+    return 2; // Night (22:00 to 06:59)
   }
 
   function calculateRosterForDate(targetDate) {
@@ -177,6 +190,9 @@
     updateLookupDisplay();
   }
 
+  // ==========================================
+  // 5. DISPLAY UPDATES (With Midnight Fix)
+  // ==========================================
   function renderPopoverList(groupId, targetElemId) {
     const container = document.getElementById(targetElemId);
     const leaders = GROUP_LEADERS[groupId] || [];
@@ -207,12 +223,14 @@
     const now = new Date();
 
     // --- MIDNIGHT BOUNDARY FIX ---
+    // If the time is between 12:00 AM and 06:59 AM, roll logical date back to yesterday 
+    // so the night shift calculates properly until 7:00 AM.
     let logicalDate = new Date(now);
     if (now.getHours() < 7) {
       logicalDate.setDate(logicalDate.getDate() - 1);
     }
 
-    // 1. Update Clock UI
+    // Update Clock UI
     let hours = now.getHours();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
@@ -221,23 +239,23 @@
     document.getElementById("clock-ampm").innerText = ampm;
     document.getElementById("clock-date-full").innerText = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 
-    // 2. Calculate Active Shift using the LOGICAL date
+    // Calculate Active Shift
     const activeShiftIndex = getActiveShiftIndex(now.getHours());
-    const liveRoster = calculateRosterForDate(logicalDate);
+    const liveRoster = calculateRosterForDate(logicalDate); // Uses logicalDate
     const activeShift = SHIFTS[activeShiftIndex];
     const activeGroup = liveRoster[activeShift.key];
 
-    // 3. Calculate Upcoming Shift
+    // Calculate Upcoming Shift
     let upcomingShiftIndex = (activeShiftIndex + 1) % 3;
     let upcomingDate = new Date(logicalDate);
-    
-    // If active shift is Night (2), the next shift is Morning of the NEXT logical day
-    if (activeShiftIndex === 2) upcomingDate.setDate(upcomingDate.getDate() + 1);
+    if (activeShiftIndex === 2) {
+      upcomingDate.setDate(upcomingDate.getDate() + 1); // If currently Night, upcoming is Morning next day
+    }
 
     const upcomingRoster = calculateRosterForDate(upcomingDate);
     const upcomingShift = SHIFTS[upcomingShiftIndex];
 
-    // 4. Update Shift UI Elements
+    // Map info to UI
     document.getElementById("active-group").innerText = activeGroup;
     document.getElementById("shift-name").innerText = activeShift.name;
     document.getElementById("shift-window").innerText = activeShift.window;
@@ -246,7 +264,7 @@
     document.getElementById("upcoming-shift-name").innerText = upcomingShift.name;
     document.getElementById("upcoming-shift-window").innerText = upcomingShift.window;
 
-    // 5. Render Team Leaders
+    // Map Team Leaders with Checkbox Statuses
     const leaders = GROUP_LEADERS[activeGroup] || [];
     const activeCount = leaders.filter(l => l.active).length;
     document.getElementById("active-count-badge").innerText = `(${activeCount}/${leaders.length} Present)`;
@@ -277,9 +295,16 @@
     updateLookupDisplay();
   }
 
-  // Initialize Data
+  // ==========================================
+  // 6. INITIALIZATION & ENGINE START
+  // ==========================================
   initTheme();
-  loadLeaderStatuses(); // <-- NEW: Load saved status from local storage on page load
   document.getElementById("lookup-date-input").value = formatDateToISO(selectedDate);
+  
+  // Start the clock and shift checker (runs every 1 second)
   updateDisplay();
   setInterval(updateDisplay, 1000);
+
+  // Pull initial Google Sheets data immediately, then poll every 10 seconds for updates
+  fetchLiveStatus();
+  setInterval(fetchLiveStatus, 10000);
