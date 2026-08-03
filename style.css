@@ -331,11 +331,11 @@ body {
 .status-toggle {
   width: 22px;
   height: 22px;
-  accent-color: rgba(16, 185, 129);
-  border-radius: 50%;
+  accent-color: #10b981;
 }
 .status-toggle:disabled {
   cursor: not-allowed;
+  accent-color: #10b981;
 }
 
 .upcoming-box {
