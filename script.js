@@ -20,7 +20,8 @@
     "Group C": [
       { id: "c1", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
       { id: "c2", name: "Melaku Getachew", phone: "+251 94 069 8357", active: true },
-      { id: "c3", name: "Abdurehiman Yimer", phone: "+251 93 403 3815", active: true }
+      { id: "c3", name: "Abdurehiman Yimer", phone: "+251 93 403 3815", active: true },
+      { id: "c4", name: "Kaleab Akalu", phone: "+251 92 088 0994", active: true }
     ],
     "Group D": [
       { id: "d1", name: "Helen Wendosen", phone: "+251 92 256 8557", active: true },
