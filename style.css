@@ -335,7 +335,7 @@ body {
 }
 .status-toggle:disabled {
   cursor: not-allowed;
-  opacity: 1;
+  background-color: #10b981;
 }
 
 .upcoming-box {
