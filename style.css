@@ -335,7 +335,6 @@ body {
 }
 .status-toggle:disabled {
   cursor: not-allowed;
-  opacity: 0.4;
 }
 
 .upcoming-box {
