@@ -331,7 +331,7 @@ body {
 .status-toggle {
   width: 22px;
   height: 22px;
-  accent-color: #10b981;
+  accent-color: rgba(16, 185, 129, 0.15);
 }
 .status-toggle:disabled {
   cursor: not-allowed;
