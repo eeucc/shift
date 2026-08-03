@@ -333,9 +333,9 @@ body {
   height: 22px;
   accent-color: #10b981;
 }
-.status-toggle:disabled {
+.status-toggle:checked:disabled {
   cursor: not-allowed;
-  background-color: #10b981;
+  accent-color: #10b981;
 }
 
 .upcoming-box {
