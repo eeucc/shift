@@ -335,11 +335,7 @@ body {
 }
 .status-toggle:disabled {
   cursor: not-allowed;
-  accent-color: #10b981;
-}
-
-input[type="checkbox"]:checked:disabled {
-    accent-color: #10b981;
+  opacity: 1;
 }
 
 .upcoming-box {
