@@ -24,7 +24,6 @@
       { id: "c4", name: "Kaleab Akalu", phone: "+251 92 088 0994", active: true }
     ],
     "Group D": [
-      { id: "d1", name: "Helen Wendosen", phone: "+251 92 256 8557", active: true },
       { id: "d2", name: "Biruk Abebe", phone: "+251 92 323 2872", active: true },
       { id: "d3", name: "Tigist Tsige", phone: "+251 93 559 6268", active: true },
       { id: "d4", name: "Legish Leul", phone: "+251 93 686 2886", active: true }
