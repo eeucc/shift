@@ -8,25 +8,25 @@
   const GROUP_LEADERS = {
     "Group A": [
       { id: "a1", name: "Meron Zewdie", phone: "+251 91 958 4882", active: true },
-      { id: "a2", name: "Samuel Zenebe", phone: "+251 91 283 5731", active: true },
-      { id: "a3", name: "Getachew Abeje", phone: "+251 91 919 6506", active: true }
+      { id: "a2", name: "Moera Terfasa", phone: "+251 96 116 2564", active: true },
+      { id: "a3", name: "Tigist Tsige", phone: "+251 93 559 6268", active: true },
+      { id: "a4", name: "Melaku Getachew", phone: "+251 94 069 8357", active: true }      
     ],
     "Group B": [
       { id: "b1", name: "Lemma Tadesse", phone: "+251 92 711 2871", active: true },
-      { id: "b2", name: "Moera Terfasa", phone: "+251 96 116 2564", active: true },
-      { id: "b3", name: "Roman Bekele", phone: "+251 92 904 5713", active: true },
+      { id: "b2", name: "Roman Bekele", phone: "+251 92 904 5713", active: true },
+      { id: "b3", name: "Abdurehiman Yimer", phone: "+251 93 403 3815", active: true },
       { id: "b4", name: "Tsion Legesse", phone: "+251 92 192 2978", active: false }
     ],
     "Group C": [
-      { id: "c1", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
-      { id: "c2", name: "Melaku Getachew", phone: "+251 94 069 8357", active: true },
-      { id: "c3", name: "Abdurehiman Yimer", phone: "+251 93 403 3815", active: true },
-      { id: "c4", name: "Kaleab Akalu", phone: "+251 92 088 0994", active: true }
+      { id: "c1", name: "Kaleab Akalu", phone: "+251 92 088 0994", active: true },
+      { id: "c2", name: "Getachew Abeje", phone: "+251 91 919 6506", active: true },
+      { id: "c3", name: "Legish Leul", phone: "+251 93 686 2886", active: true }
     ],
     "Group D": [
-      { id: "d2", name: "Biruk Abebe", phone: "+251 92 323 2872", active: true },
-      { id: "d3", name: "Tigist Tsige", phone: "+251 93 559 6268", active: true },
-      { id: "d4", name: "Legish Leul", phone: "+251 93 686 2886", active: true }
+      { id: "d1", name: "Biruk Abebe", phone: "+251 92 323 2872", active: true },
+      { id: "d2", name: "Zemenay Seid", phone: "+251 91 366 0589", active: true },
+      { id: "d3", name: "Samuel Zenebe", phone: "+251 91 283 5731", active: true }      
     ]
   };
 
